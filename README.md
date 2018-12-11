@@ -19,3 +19,5 @@
 - GC time elapsed: 7.680 seconds
 - CPU time spent: 330.710 seconds
 
+## Link to dataset
+https://www.yelp.com/dataset/challenge
