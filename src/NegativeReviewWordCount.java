@@ -27,8 +27,19 @@ public class NegativeReviewWordCount {
             "had", "it's", "it", "its", "in", "would", "could", "should", "for", "get", "me", "he", "she", "him", "her"};
     private final static Set<String> wordsToSkip = new HashSet<>(Arrays.asList(words));
 
+        public boolean isInteger(String input) {
+            try {
+                Integer.parseInt(input);
+                return true;
+            }
+            catch(Exception e) {
+                return false;
+            }
+        }
+
         public void map(Object key, Text value, Context context ) throws IOException, InterruptedException {
             String[] singleReview = value.toString().split("\\|");
+
 
             if(singleReview.length >= 9){
                 // 3th index is the review
@@ -36,18 +47,20 @@ public class NegativeReviewWordCount {
                 String word = "";
 
                 // 8th index is the star rating
-                if (Integer.parseInt(singleReview[8]) < 3) {
-                    while(reviewItr.hasMoreTokens()) {
-                        word = reviewItr.nextToken().toLowerCase();
+                if (isInteger(singleReview[8])) {
+                    if (Integer.parseInt(singleReview[8]) < 3) {
+                        while(reviewItr.hasMoreTokens()) {
+                            word = reviewItr.nextToken().toLowerCase();
 
-                        if (!wordsToSkip.contains(word)) {
-                            // 4th index is the businessID
-                            context.write(new Text(singleReview[4] + ' ' + word), one);
+                            if (!wordsToSkip.contains(word)) {
+                                // 4th index is the businessID
+                                context.write(new Text(singleReview[4] + ' ' + word), one);
+                            }
+
                         }
-
                     }
-
                 }
+
             }
 
         }
@@ -66,6 +79,7 @@ public class NegativeReviewWordCount {
                 context.write(key, result);
             }
         }
+
 
 
 
