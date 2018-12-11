@@ -1,5 +1,7 @@
 # BigData-YelpDataSet
 
+Link to dataset: https://www.yelp.com/dataset/download
+ 
 ## Instructions
 1. Change the data from JSON to CSV using python and pandas, setting the delimiter to | since commas are a character in the input
 2. Upload to XSEDE bridges using Globus
