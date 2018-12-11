@@ -9,6 +9,9 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.Job;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 
@@ -18,32 +21,51 @@ public class NegativeReviewWordCount {
     public static class BusinessReviewMapper extends Mapper<Object, Text, Text, IntWritable> {
 
     private final static IntWritable one = new IntWritable(1);
+    private final static String[] words = new String[] {"a", "and", "an", "but", "is", "or", "the", "to", "too", ".",
+            ",", "!", "were", "are", "then", "also", "with", "while", "who", "which", "besides", "since", "until",
+            "after", "before", "like", "so", "they", "them", "their", "there", "they're", "we", "you", "i", "my", "was",
+            "had", "it's", "it", "its", "in", "would", "could", "should", "for", "get", "me", "he", "she", "him", "her"};
+    private final static Set<String> wordsToSkip = new HashSet<>(Arrays.asList(words));
+
+        public boolean isInteger(String input) {
+            try {
+                Integer.parseInt(input);
+                return true;
+            }
+            catch(Exception e) {
+                return false;
+            }
+        }
 
         public void map(Object key, Text value, Context context ) throws IOException, InterruptedException {
             String[] singleReview = value.toString().split("\\|");
 
+
             if(singleReview.length >= 9){
                 // 3th index is the review
-                StringTokenizer reviewItr = new StringTokenizer(singleReview[3]);
+                StringTokenizer reviewItr = new StringTokenizer(singleReview[3], " ,.1234567890!;?-:@[](){}_*/");
                 String word = "";
 
                 // 8th index is the star rating
-                if (Integer.parseInt(singleReview[8]) < 3) {
-                    while(reviewItr.hasMoreTokens()) {
-                        word = reviewItr.nextToken();
+                if (isInteger(singleReview[8])) {
+                    if (Integer.parseInt(singleReview[8]) < 3) {
+                        while(reviewItr.hasMoreTokens()) {
+                            word = reviewItr.nextToken().toLowerCase();
 
-                        // 4th index is the businessID
-                        context.write(new Text(singleReview[4] + ' ' + word), one);
+                            if (!wordsToSkip.contains(word)) {
+                                // 4th index is the businessID
+                                context.write(new Text(singleReview[4] + ' ' + word), one);
+                            }
+
+                        }
                     }
-
                 }
+
             }
 
         }
 
     }
-
-
 
     public static class BusinessReviewReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
             private IntWritable result = new IntWritable();
@@ -57,6 +79,8 @@ public class NegativeReviewWordCount {
                 context.write(key, result);
             }
         }
+
+
 
 
     public static void main(String[] args) throws Exception {
