@@ -23,7 +23,8 @@ public class NegativeReviewWordCount {
     private final static IntWritable one = new IntWritable(1);
     private final static String[] words = new String[] {"a", "and", "an", "but", "is", "or", "the", "to", "too", ".",
             ",", "!", "were", "are", "then", "also", "with", "while", "who", "which", "besides", "since", "until",
-            "after", "before", "like", "so", "they", "them", "their", "there", "they're", "we", "you", "i"};
+            "after", "before", "like", "so", "they", "them", "their", "there", "they're", "we", "you", "i", "my", "was",
+            "had", "it's", "it", "its", "in", "would", "could", "should", "for", "get", "me", "he", "she", "him", "her"};
     private final static Set<String> wordsToSkip = new HashSet<>(Arrays.asList(words));
 
         public void map(Object key, Text value, Context context ) throws IOException, InterruptedException {
