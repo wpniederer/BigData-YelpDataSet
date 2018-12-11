@@ -13,7 +13,7 @@
         cd ..
         hadoop jar src/ReviewTest.jar NegativeReviewWordCount in/yelp_dataset.csv output
 
-##Execution time
+## Execution time
 - Total time spent by all map tasks: 7770.375 seconds
 - Total time spent by all reduce tasks: 636.246 seconds
 - GC time elapsed: 7.680 seconds
