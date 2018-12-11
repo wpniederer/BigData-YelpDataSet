@@ -4,7 +4,7 @@
 1. Change the data from JSON to CSV using python and pandas, setting the delimiter to | since commas are a character in the input
 2. Upload to XSEDE bridges using Globus
 3. Start Hadoop using following commands:
-        interact -N 4 -t 01:00:00
+        interact -N 8 -t 08:00:00
         module load hadoop
         start-hadoop.sh
 3. Compile the java file into a jar and execute:
